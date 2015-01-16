@@ -22,12 +22,22 @@ int main() {
     sf::Time time = clock.restart();
     float deltaTime = time.asSeconds();
     // Procesar Eventos
-
+    sf::Event event;
+    while(window.pollEvent(event)) {
+      switch(event.type) {
+        case sf::Event::Closed:
+          window.close();
+          break;
+        case sf::Event::KeyPressed:
+          if (event.key.code == sf::Keyboard::Escape) window.close();
+          break;
+        default:
+          break;
+      }
+    }
     // Updatear el juego
-      // Actualizamos la posicion de la pelota en funcion de la gravedad
-    ballSpeed.y += 9.8*deltaTime*20;
+    ballSpeed.y += 98*deltaTime;
     ballPosition += ballSpeed * deltaTime;
-      // Comprobamos las colisiones
     if (ballPosition.y + RADIUS >= SHEIGHT) { // con el suelo
       ballSpeed.y *= -1;
       ballPosition.y = SHEIGHT - RADIUS;
@@ -44,7 +54,6 @@ int main() {
       ballSpeed.x *= -1;
       ballPosition.x = RADIUS;
     }
-      // Le ponemos la posicion de la bola a nuestro circulo
     ball.setPosition(ballPosition);
     // Dibujar el juego
     window.clear(sf::Color(100,100,100));
