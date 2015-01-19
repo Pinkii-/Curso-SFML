@@ -1,3 +1,5 @@
 Makefile
 projecte
 main.o
+Ball.o
+utilities.o
