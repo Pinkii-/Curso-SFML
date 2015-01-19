@@ -1,11 +1,16 @@
 #include "Ball.hpp"
+#include <iostream>
 
-Ball::Ball(sf::Texture *textura) {
+Ball::Ball(sf::Texture *textura, sf::Vector2f pos, sf::Vector2f speed, float scale) {
 	sprite.setTexture(*textura); //Pasamos un puntero para arreglar el famoso cuadrado blanco
 	sf::FloatRect boundsRect = sprite.getLocalBounds(); 
 	sprite.setOrigin(boundsRect.left + boundsRect.width/2.0f, boundsRect.top  + boundsRect.height/2.0f);
-	speed = sf::Vector2f(250,0);;
-	radius = boundsRect.width/2;
+	sprite.setPosition(pos);
+	this->speed = speed;
+	initRadius = boundsRect.width/2;
+	this->scale = scale;
+	sprite.setScale(scale,scale);
+	std::cout << scale << std::endl;
 }
 
 Ball::~Ball() {}
@@ -14,8 +19,10 @@ void Ball::update(float deltaTime) {
 	speed.y += 98*deltaTime;
 	sf::Vector2f ballPosition = sprite.getPosition();
 	ballPosition += speed * deltaTime;
+	int bounceSpeed = MAX_BOUNCE_SPEED * (0.5 + std::log10(10*scale)*0.5);
+	float radius = initRadius * scale;
     if (ballPosition.y + radius >= SHEIGHT) { // con el suelo
-      speed.y *= -1;
+      speed.y = -bounceSpeed;
       ballPosition.y = SHEIGHT - radius;
     }
     else if (ballPosition.y - radius <= 0) { // con el techo
@@ -39,9 +46,17 @@ void Ball::draw(sf::RenderWindow *window) {
 
 bool Ball::isClicked(sf::Vector2f mousePos) {
 	sf::Vector2f posBall = sprite.getPosition();
+	int radius = initRadius * scale;
 	if (mousePos.x > posBall.x - radius and mousePos.x < posBall.x + radius and mousePos.y > posBall.y - radius and mousePos.y < posBall.y + radius) {
-		speed.y -= 200;
 		return true;
 	}
 	return false;
+}
+
+sf::Vector2f Ball::getPos() {
+	return sprite.getPosition();
+}
+
+float Ball::getScale() {
+	return scale;
 }
