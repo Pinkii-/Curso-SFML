@@ -3,17 +3,20 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 
-const int SWIDTH = 1280;
-const int SHEIGHT = 720;
-const int RADIUS = 50;
+const int SWIDTH = 800;
+const int SHEIGHT = 600;
 
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(SWIDTH,SHEIGHT), "My Pang", sf::Style::Default);
 
-  sf::CircleShape ball(RADIUS);
-  ball.setFillColor(sf::Color::Red);
-  ball.setOrigin(RADIUS,RADIUS);
+  sf::Texture textura;
+  textura.loadFromFile("media/Bola.png");
+  sf::Sprite ball;
+  ball.setTexture(textura);
+  sf::FloatRect boundsRect = ball.getLocalBounds();                         
+  ball.setOrigin(boundsRect.left + boundsRect.width/2.0f, boundsRect.top  + boundsRect.height/2.0f);
+  int ballRadio = boundsRect.width/2.0f;
   sf::Vector2f ballSpeed(250,0);
   sf::Vector2f ballPosition(SWIDTH/2, SHEIGHT/2);
 
@@ -38,21 +41,21 @@ int main() {
     // Updatear el juego
     ballSpeed.y += 98*deltaTime;
     ballPosition += ballSpeed * deltaTime;
-    if (ballPosition.y + RADIUS >= SHEIGHT) { // con el suelo
+    if (ballPosition.y + ballRadio >= SHEIGHT) { // con el suelo
       ballSpeed.y *= -1;
-      ballPosition.y = SHEIGHT - RADIUS;
+      ballPosition.y = SHEIGHT - ballRadio;
     }
-    else if (ballPosition.y - RADIUS <= 0) { // con el techo
+    else if (ballPosition.y - ballRadio <= 0) { // con el techo
       ballSpeed.y *= -1;
-      ballPosition.y = RADIUS;
+      ballPosition.y = ballRadio;
     }
-    if (ballPosition.x + RADIUS >= SWIDTH) { // con el lado derecho
+    if (ballPosition.x + ballRadio >= SWIDTH) { // con el lado derecho
       ballSpeed.x *= -1;
-      ballPosition.x = SWIDTH - RADIUS;
+      ballPosition.x = SWIDTH - ballRadio;
     }
-    else if(ballPosition.x - RADIUS <= 0) { // con el lado izquierdo
+    else if(ballPosition.x - ballRadio <= 0) { // con el lado izquierdo
       ballSpeed.x *= -1;
-      ballPosition.x = RADIUS;
+      ballPosition.x = ballRadio;
     }
     ball.setPosition(ballPosition);
     // Dibujar el juego
