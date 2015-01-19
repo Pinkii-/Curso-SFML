@@ -34,6 +34,15 @@ int main() {
         case sf::Event::KeyPressed:
           if (event.key.code == sf::Keyboard::Escape) window.close();
           break;
+        case sf::Event::MouseButtonPressed:
+        {
+          sf::Vector2f posBall = ball.getPosition();
+          sf::Vector2f mousePos = sf::Vector2f(event.mouseButton.x,event.mouseButton.y);
+          if (event.mouseButton.button == sf::Mouse::Left and
+              mousePos.x > posBall.x - ballRadio and mousePos.x < posBall.x + ballRadio and
+              mousePos.y > posBall.y - ballRadio and mousePos.y < posBall.y + ballRadio) ballSpeed.y -= 200; 
+          break;
+      }
         default:
           break;
       }
